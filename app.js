@@ -77,6 +77,36 @@ app.post('/changepassword', function (req,res){
   }
 });
 
+//MOSTRAMOS LA VISTA LOGIN CUANDO DE HACE UN GET A /login
+app.get('/login', function (req, res) {
+  res.render('login',{message: "INICIE SESIÓN PARA VER EL CONTENIDO."});
+});
+
+//MOSTRAMOS LA VISTA REGISTER CUANDO DE HACE UN GET A /register
+app.get('/register', function (req, res) {
+res.render('register');
+});
+
+//MOSTRAMOS LA VISTA CHANGEPASSWORD CUANDO DE HACE UN GET A /changepassword
+app.get('/changepassword', function (req, res) {
+  res.render('changepassword',{message: "INTRODUZCA SU NUEVA CONTRASEÑA."});
+});
+
+//MOSTRAMOS LA VISTA AUX CUANDO DE HACE UN GET A /
+app.get('/', function(req, res) {
+  res.render('aux');
+});
+
+// CIERRE DE SESIÓN
+app.get('/logout', function (req, res) {
+  req.session.destroy();
+  res.render('login',{message: "CIERRE DE SESIÓN CON ÉXITO"});
+});
+
+// Get content endpoint
+app.get('/content/*?',
+    auth  // next only if authenticated
+);
 
 app.use('/content', express.static(path.join(__dirname, 'public')));
 
