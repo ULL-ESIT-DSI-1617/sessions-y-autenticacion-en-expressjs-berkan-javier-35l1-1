@@ -39,6 +39,29 @@ var auth = function(req, res, next) {
       res.render('login',{message: "INICIA SESIÓN PARA VER EL CONTENIDO."});
 };
 
+//COMPARAMOS LAS VARIABLES DEL POST CON EL bodyParser Y COMPARAMOS CON LOS USUARIOS CREADOS PARA SABER SI EL LOG ES CORRECTO. SI LO ES MODIFICAMOS LAS VARIABLES DE SESIÓN.
+app.post('/login', function (req,res){
+  var json = JSON.parse(fs.readFileSync('./users.json', 'utf8'));
+  if(req.body.username=json &&
+                bcrypt.compareSync(req.body.password, json[req.body.username])) {
+    req.session.user = req.body.username;
+    req.session.admin = true;
+    res.redirect('/content')
+  } else {
+    res.render('login',{message: "ERROR DE INICIO DE SESIÓN."})
+  }
+});
+
+//ESCRIBIMOS EL NUEVO USUARIO EN EL FICHERO users.json.
+app.post('/register', function (req,res){
+  var obj = require('./users.json');
+  obj[req.body.username] = bcrypt.hashSync(req.body.password);
+  fs.writeFile('./users.json', JSON.stringify(obj,"",4), function(err) {
+    console.log(err);
+  })
+  res.render('login',{message: "REGISTRO REALIZADO, INICIE SESIÓN."})
+});
+
 
 
 app.use('/content', express.static(path.join(__dirname, 'public')));
