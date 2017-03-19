@@ -31,6 +31,17 @@ app.use(function(req, res, next) {
   next();
 });
 
+//CREANDO FUNCIÓN DE AUTENTICACIÓN EN LA QUE SE HACE next() SOLO SI EL LOG ES CORRECTO
+var auth = function(req, res, next) {
+    if (req.session.admin)
+      return next();
+    else
+      res.render('login',{message: "INICIA SESIÓN PARA VER EL CONTENIDO."});
+};
+
+
+
+app.use('/content', express.static(path.join(__dirname, 'public')));
 
 //Asignamos un puerto al servidor, en este caso el puerto 8080.
 app.set('port', (process.env.PORT || 8090));
