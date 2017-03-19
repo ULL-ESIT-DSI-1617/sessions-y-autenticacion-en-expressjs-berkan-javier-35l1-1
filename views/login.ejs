@@ -1,13 +1,14 @@
 <% include head %>
 
-  <div class="login-page">
+<div class="login-page">
   <div class="form">
     <form class="login-form" method="post" action="/login">
       <input type="text" placeholder="username" name="username"/>
       <input type="password" placeholder="password" name="password"/>
       <button>login</button>
+      <h5> <%= message %> </h5>
     </form>
   </div>
-  </div>
+</div>
 
-  <% include foot %>
+<% include foot %>
