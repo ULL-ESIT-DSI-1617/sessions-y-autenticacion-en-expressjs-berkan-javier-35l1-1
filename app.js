@@ -62,6 +62,20 @@ app.post('/register', function (req,res){
   res.render('login',{message: "REGISTRO REALIZADO, INICIE SESIÓN."})
 });
 
+//CAMBIAMOS LA CONTRASEÑA EN EL FICHERO users.json
+app.post('/changepassword', function (req,res){
+  var json = JSON.parse(fs.readFileSync('./users.json', 'utf8'));
+  var obj = require('./users.json');
+  obj[req.body.username] = bcrypt.hashSync(req.body.newpassword);
+  if(req.body.username=json  &&
+                bcrypt.compareSync(req.body.oldpassword, json[req.body.username])) {
+    fs.writeFile('./users.json', JSON.stringify(obj,"",4), function(err) { console.log(err);
+    })
+    res.render('login',{message: "CONTRASEÑA CAMBIADA. INICIE SESIÓN."})
+  } else {
+    res.render('changepassword',{message: "CREDENCIALES INCORRECTAS, INTÉNTELO DE NUEVO."})
+  }
+});
 
 
 app.use('/content', express.static(path.join(__dirname, 'public')));
